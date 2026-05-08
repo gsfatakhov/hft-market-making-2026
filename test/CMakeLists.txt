@@ -20,7 +20,16 @@ add_executable(${TARGET} ${TEST_SRC})
 target_link_libraries(${TARGET} PRIVATE
     Catch2-static-lib
     hft-market-making-common
+    hft-market-making-backtest
 )
 
 # Register the tests with CTest
 catch_discover_tests(${TARGET})
+
+find_package(Python3 COMPONENTS Interpreter REQUIRED)
+add_test(NAME python-api-smoke
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/PythonApiSmokeTest.py
+)
+set_tests_properties(python-api-smoke PROPERTIES
+    ENVIRONMENT "PYTHONPATH=${CMAKE_BINARY_DIR}/python"
+)

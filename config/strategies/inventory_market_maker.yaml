@@ -1,0 +1,7 @@
+# Flat YAML strategy parameters for strategies/inventory_market_maker.py.
+
+order_quantity: 1000
+inventory_limit: 5000
+half_spread: 0.00000005
+requote_threshold: 0.000000005
+skew_per_unit: 0.0

@@ -39,3 +39,22 @@ target_link_libraries(${TGT} PUBLIC INTERFACE
     $<$<CONFIG:Release>:-lCatch2Main -lCatch2>
 )
 
+# ---------------------------------------------------------------------------------------
+# pybind11 - C++/Python binding headers
+ExternalProject_Add(
+    pybind11
+    GIT_REPOSITORY https://github.com/pybind/pybind11.git
+    GIT_TAG v2.13.6
+    GIT_SHALLOW TRUE
+    GIT_PROGRESS TRUE
+    SOURCE_DIR "${CMAKE_SOURCE_DIR}/3rdparty/pybind11"
+    BINARY_DIR "${CMAKE_BINARY_DIR}/3rdparty/pybind11"
+    CMAKE_ARGS ${FORWARDED_CMAKE_ARGS} -DPYBIND11_TEST=OFF
+    BUILD_COMMAND $(MAKE)
+    INSTALL_COMMAND $(MAKE) -s DESTDIR=${DESTDIR} install
+)
+
+set(TGT pybind11-headers)
+add_library(${TGT} INTERFACE)
+add_dependencies(${TGT} pybind11)
+target_include_directories(${TGT} SYSTEM PUBLIC INTERFACE ${CMAKE_BINARY_DIR}/include)

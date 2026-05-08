@@ -4,6 +4,8 @@ build
 log
 .claude
 CLAUDE.md
+MD/
+MD_latest.zip
 
 
 ### C++ ###

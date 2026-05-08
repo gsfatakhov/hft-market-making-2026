@@ -14,6 +14,7 @@
 ├── config                      # example config files
 ├── scripts                     # shell (and other) maintenance scripts
 ├── src                         # source files
+├    ├── backtest               # backtest engine, IO, and sample strategies
 ├    ├── common                 # common utility files
 ├    ├── ...                    # ...
 ├    └── main                   # main() for hft-market-making app
@@ -80,8 +81,45 @@ build/bin/test/hft-market-making-tests
 HFT market-making app:
 
 ```
-build/bin/hft-market-making
+build/bin/hft-market-making <config.cfg>
 ```
+
+Sample backtest:
+
+```
+build/bin/hft-market-making config/sample_backtest.cfg
+```
+
+The config path is mandatory. The binary does not provide a default config, default dataset, or implicit strategy selection. For now, the supported C++ strategy is selected explicitly in cfg with `strategy.name = inventory_market_maker`. Use the Python helper script below when you want to run a Python strategy.
+
+Python strategy example, using the same Python interpreter CMake found during configure:
+
+```
+PYTHONPATH=build/python /path/to/cmake-detected-python strategies/inventory_market_maker.py \
+  --lob-path data/sample/lob.csv \
+  --trades-path data/sample/trades.csv \
+  --strategy-config config/strategies/inventory_market_maker.yaml
+```
+
+Python strategy via helper script:
+
+```
+scripts/run_python_backtest.sh MD/lob.csv MD/trades.csv strategies/inventory_market_maker.py \
+  --strategy-config config/strategies/inventory_market_maker.yaml \
+  --report-path reports/python_base_report.md
+
+scripts/run_python_backtest.sh data/sample/lob.csv data/sample/trades.csv strategies/inventory_market_maker.py \
+  --strategy-config config/strategies/inventory_market_maker.yaml \
+  --progress-interval-events 10
+```
+
+The third positional argument is mandatory and must be the Python strategy runner. The helper intentionally does not provide a default strategy or default dataset, so an omitted argument fails fast instead of silently running the sample strategy. A custom runner must accept `--lob-path` and `--trades-path`.
+
+The helper prints the Python runner, data paths, data sizes, Python executable, and forwarded args before launch. Reusable Python runner infrastructure lives in `strategies/strategy_app.py`; custom strategy runners can subclass `BacktestStrategyApp` to get common args, config loading, report writing, and the built-in C++ progress printer without copying it between strategies. `strategies/inventory_market_maker.py` also supports flat YAML strategy params with `--strategy-config config/strategies/inventory_market_maker.yaml`; CLI flags override values from that file.
+
+The sample run uses `data/sample/lob.csv` and `data/sample/trades.csv`, then writes `reports/sample_report.md`. See `docs/backtester.md` for the engine architecture, fill model, and Python callback API.
+
+The runner prints a tqdm-style progress line with percent, event counts, speed, elapsed time, and ETA. Configure it with `progress.enabled` and `progress.interval_events` in the cfg file.
 
 ## Contributing
 
