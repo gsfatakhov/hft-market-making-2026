@@ -33,3 +33,17 @@ add_test(NAME python-api-smoke
 set_tests_properties(python-api-smoke PROPERTIES
     ENVIRONMENT "PYTHONPATH=${CMAKE_BINARY_DIR}/python"
 )
+
+add_test(NAME python-avellaneda-stoikov
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/PythonAvellanedaStoikovTest.py
+)
+set_tests_properties(python-avellaneda-stoikov PROPERTIES
+    ENVIRONMENT "PYTHONPATH=${CMAKE_BINARY_DIR}/python:${CMAKE_SOURCE_DIR}/strategies"
+)
+
+add_test(NAME python-avellaneda-stoikov-microprice
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/PythonAvellanedaStoikovMicropriceTest.py
+)
+set_tests_properties(python-avellaneda-stoikov-microprice PROPERTIES
+    ENVIRONMENT "PYTHONPATH=${CMAKE_BINARY_DIR}/python:${CMAKE_SOURCE_DIR}/strategies"
+)

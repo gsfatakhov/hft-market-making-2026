@@ -1,0 +1,18 @@
+# Flat YAML strategy parameters for strategies/avellaneda_stoikov_microprice.py.
+
+order_quantity: 1000
+inventory_limit: 5000
+gamma: 0.1
+sigma: 0.00001
+k: 20000000.0
+horizon_seconds: 1.0
+timestamp_unit_seconds: 0.000000001
+requote_threshold: 0.000000005
+calibration_lob_path: MD_splited/calibration/lob.csv
+imbalance_bins: 10
+max_spread_bins: 5
+tick_size: 0.0
+min_state_observations: 10
+calibration_max_rows: 0
+microprice_tolerance: 0.000000000001
+microprice_max_iterations: 100
